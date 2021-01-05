@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Receipt from './receipt';
+import Store from './store';
+
 
 ReactDOM.render(
-  <React.StrictMode>
-		<Receipt />	
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+    <Store>
+        <Receipt />
+    </Store>,
+    document.getElementById('root'));

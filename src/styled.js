@@ -17,3 +17,9 @@ export const Input = styled.input.attrs({placeholder:'請輸入後三碼'})`
 		placeholder:'請輸入全部數字'
 	}
 `
+export const Span = styled.span`
+    position: relative;
+    top: 25px;
+    left: 10px;
+	padding:0px 20px 0 20px;
+`

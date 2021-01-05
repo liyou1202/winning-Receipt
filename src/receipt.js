@@ -1,45 +1,55 @@
-import React,{Fragment,useState,useEffect,useReducer} from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import axios from 'axios';
 import {Input,
 		} from './styled'
 import FormDialog from './dialog';
-import {reducer,init} from './reducer';
+import { Context } from './store';
+
 
 export default function Receipt() {
-	const [state , dispatch] = useReducer(reducer,init);
-	console.log (init);
-    // const [inputValue, setValue] = React.useState('');
-    // const [prev,setPrev] = React.useState('');
-    // const [showDialog,setshowDialog] = React.useState(false);
-    // const handleChange = (e) =>{
-    // 		setValue(e.target.value);
-    // }
-    // useEffect(()=>{
-    // 	if(inputValue.length == 3){
-    //    		setPrev(inputValue);
-    //    		axios.post(`http://as-traveler.com/test/lottery1.php`, { input:inputValue })
-    //  			 .then(res => {
-		  //   		    console.log(res.data);
-		  //   		    if(res.data){setshowDialog(true)}
-		    		    	
-    //  	 })
-    // 		setValue('');
-    // 	}
-    // });
+	// state抓取globle state 
+	const [state, dispatch] = useContext(Context)
 
+    useEffect(() => {
+    	if (state.last3Input.length === 3){
+    		var flag = false;
+    		axios.post("http://as-traveler.com/test/lottery1.php", {"input":state.last3Input})
+    		.then(res=>{
+    			flag = res.data;
+    			if (flag){
+    				//開啟dialog
+		    		dispatch({
+		      			type: 'SET_DIALOG',
+		      			value:true
+		    		});
+
+    			}else{
+			    	//歸零
+					dispatch({
+			  			type: 'SET_last_3Num_INPUT',
+			  			value: ''
+					});
+    			}
+    		});
+
+    	}
+	},[state.last3Input]);
+
+	const last_3Num_OnChange = e => {
+	    if(state.last3Input.length < 3){
+		    //賦值
+			dispatch({
+	  			type: 'SET_last_3Num_INPUT',
+	  			value: e.target.value
+			});
+	    }
+ 	}
 	return(
-			/**
 			<Fragment>
-				<Input  value = {inputValue}
-						onChange = {handleChange}
-						maxLength = "3"
-						type = "number"/>
-				<h3>{prev}</h3>
-				<FormDialog show = {showDialog}/>
-			</Fragment>
-			*/
-			<Fragment>
-				<p>{}</p>
+				<Input  value = {state.last3Input}
+						onChange = { e => last_3Num_OnChange(e)}
+						type = "text"/>
+				<FormDialog/>
 			</Fragment>
 		);
 
